@@ -1,0 +1,29 @@
+[
+    {
+        "name":"default",
+        "type": "postgres",
+        "host": "localhost",
+        "port": 5432,
+        "username": "postgres",
+        "password": "Kaspersky13*",
+        "database": "Agrocommerce",
+        "entities": [
+            "dist/entities/pg/**/*.js"
+        ],
+        "synchrinize": true
+    },
+    {
+        "name": "second-connection",
+        "type": "mongodb",
+        "host": "localhost",
+        "port": 27017,
+        "username": "",
+        "password": "",
+        "database": "Agrocommerce",
+        "entities": [
+            "dist/entities/mg/**/*.js"
+        ],
+        "useUnifiedTopology": true,
+        "synchrinize": true
+    }
+]
