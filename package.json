@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha -r ts-node/register src/**/*.test.ts --exit",
-    "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test",
+    "coverage": "nyc npm run test",
     "build": "tsc",
     "dev": "tsc-watch --onSuccess \"node dist/index.js \"",
     "docs": "apidoc -i src -o docs"

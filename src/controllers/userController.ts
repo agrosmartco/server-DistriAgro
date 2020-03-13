@@ -35,8 +35,6 @@ class userController {
 
             const email = req.params.email;
 
-            console.log('aquitop', email);
-
             const user = await getCustomRepository(UserRepository, process.env.CONNECTION_MG).findByEmail(email) as User;
             return res.json(user);
 
@@ -81,6 +79,7 @@ class userController {
 
 
             const email = req.params.email;
+
             const user = await getCustomRepository(UserRepository, process.env.CONNECTION_MG).findByEmail(email) as User;
 
 
@@ -151,7 +150,7 @@ class userController {
 
             const providedEmail = req.body.email;
             const providedPass = req.body.password;
-            
+
 
             const validateCredentials = await comparePassword(providedPass, providedEmail);
 

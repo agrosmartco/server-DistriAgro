@@ -6,7 +6,7 @@ export class jwtAuth {
 
     public async createToken(user: User): Promise<string> {
 
-        const token = jwt.sign({ _id: user.id, email: user.email, roles:user.roles}, config.jwtSecret || 'tokentest', {
+        const token = jwt.sign({ _id: user.id, email: user.email, roles: user.roles }, config.jwtSecret || 'tokentest', {
             expiresIn: 60 * 60 * 24
         })
 
@@ -21,15 +21,13 @@ export class jwtAuth {
         const invalidToken = "Error verifying token : 'token' is null";
 
         if (!token) {
-            
+
             return invalidToken
 
         }
-        
 
-        const payload = jwt.verify(token, config.jwtSecret || 'tokentest')
-
-        return payload
+            const payload = jwt.verify(token, config.jwtSecret || 'tokentest')
+            return payload
     }
 
 }
