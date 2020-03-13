@@ -1,4 +1,4 @@
-import { Request, Response } from "express"
+import { Request, Response, json } from "express"
 import { getRepository, getCustomRepository } from "typeorm"
 import { User } from "../entities/mg/User";
 import { UserRepository } from "../repositories/userRepository"
@@ -14,7 +14,7 @@ class userController {
 
         try {
 
-            const users = await getCustomRepository(UserRepository, process.env.CONNECTION_MG).findOne()
+            const users = await getCustomRepository(UserRepository, process.env.CONNECTION_MG).find()
 
 
             return res.json(users);
@@ -22,11 +22,92 @@ class userController {
         } catch (error) {
 
 
+            return res.status(404).json({ message: "UsersNotFound", error })
+
+        }
+
+    }
+
+
+    public async getUser(req: Request, res: Response): Promise<Response> {
+
+        try {
+
+            const email = req.params.email;
+
+            console.log('aquitop', email);
+
+            const user = await getCustomRepository(UserRepository, process.env.CONNECTION_MG).findByEmail(email) as User;
+            return res.json(user);
+
+        } catch (error) {
+
             return res.status(404).json({ message: "UserNotFound", error })
 
         }
 
     }
+
+    public async updateUser(req: Request, res: Response): Promise<Response> {
+        try {
+
+            const email = req.params.email;
+            const user = await getCustomRepository(UserRepository, process.env.CONNECTION_MG).findByEmail(email) as User;
+
+            console.log('aqui', user);
+
+
+            if (user) {
+
+                getCustomRepository(UserRepository, process.env.CONNECTION_MG).merge(user, req.body);
+
+                const result = await getCustomRepository(UserRepository, process.env.CONNECTION_MG).save(user);
+                return res.json(result);
+
+            }
+
+            return res.status(404).json({ message: 'Not user found' });
+
+
+        } catch (error) {
+
+            return res.status(404).json({ message: "UpdateUserNotFound", error });
+
+        }
+    }
+
+    public async deleteUser(req: Request, res: Response): Promise<Response> {
+        try {
+
+
+            const email = req.params.email;
+            const user = await getCustomRepository(UserRepository, process.env.CONNECTION_MG).findByEmail(email) as User;
+
+
+            if (user) {
+
+
+                const result = await getCustomRepository(UserRepository, process.env.CONNECTION_MG).remove(user) as User;
+
+                if (result) {
+
+                    return res.json({ message: "The user " + user.name + " " + user.lastname + " was deleted ", data: { result } });
+
+                }
+
+                return res.status(404).json({ message: 'Not user was deleted' });
+
+            }
+
+            return res.status(404).json({ message: 'Not user found' });
+
+        } catch (error) {
+
+            return res.status(404).json({ message: "DeleteUserNotFound", error });
+
+        }
+    }
+
 
     public async signUp(req: Request, res: Response): Promise<Response> {
 
@@ -36,7 +117,7 @@ class userController {
 
 
             if (validateCredentials) {
-                return res.status(400).json({ msg: validateCredentials })
+                return res.status(400).json({ message: validateCredentials })
             }
 
             const user = new User();
@@ -70,19 +151,19 @@ class userController {
 
             const providedEmail = req.body.email;
             const providedPass = req.body.password;
+            
 
             const validateCredentials = await comparePassword(providedPass, providedEmail);
 
-
             if (!validateCredentials) {
 
-                return res.status(404).json({ msg: 'Validate Credentials' });
+                return res.status(404).json({ message: 'Validate Credentials' });
             }
 
 
             const token = await jwtauth.createToken(validateCredentials);
 
-            return res.json(token)
+            return res.json({ token: token })
 
 
 

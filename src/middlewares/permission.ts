@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import jwtauth from "../services/jwt-auth";
+import _ from 'lodash'
 
 
 interface payload {
@@ -9,7 +10,6 @@ interface payload {
     roles: string[],
     iat: number,
     exp: number
-
 }
 
 export default function permit(roles: any) {
@@ -28,10 +28,10 @@ export default function permit(roles: any) {
 
         let decifreToken = await jwtauth.validateToken(token) as payload
 
-        console.log(roles.includes(decifreToken.roles.toString()),decifreToken.roles.toString(),roles,"admin,customer");
-        
+    
+        let contains = _.intersection(roles, decifreToken.roles);
 
-        if (roles.length && !roles.includes("admin","customer")) {
+        if (roles.length && !contains.length) {
 
             return response.status(401).json({ message: 'Unauthorized' });
         }
