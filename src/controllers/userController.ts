@@ -52,9 +52,6 @@ class userController {
             const email = req.params.email;
             const user = await getCustomRepository(UserRepository, process.env.CONNECTION_MG).findByEmail(email) as User;
 
-            console.log('aqui', user);
-
-
             if (user) {
 
                 getCustomRepository(UserRepository, process.env.CONNECTION_MG).merge(user, req.body);
