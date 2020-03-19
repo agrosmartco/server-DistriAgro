@@ -2,6 +2,7 @@ import { Router } from "express"
 import userController from "../controllers/userController"
 import passport from "passport"
 import permit from "../middlewares/permission"
+import usercontroller from "../controllers/userController";
 
 
 const router = Router();
@@ -189,5 +190,49 @@ router.post('/user/signup', userController.signUp);
 *
  */
 router.post('/user/signin', userController.signIn);
+
+/**
+ * @api {put} /user/:email Recover password of user
+ * @apiName RecoverPassword
+ * @apiGroup User
+ * 
+ * @apiParam {string} email  email of the user param header.
+ *
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * { message: 'Your password generated successfully and was sent to your email address' }
+ *
+ * @apiError UserNotFound The id of the User was not found.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *    { message: "UserNotFound", error }
+ */
+router.put('/user/recoverpassword/:email', userController.recoverPassword);
+
+
+/**
+ * @api {put} /user/:email Update password of user
+ * @apiName UpdatePassword
+ * @apiGroup User
+ * 
+ * @apiParam {string} email  email of the user param header.
+ * @apiParam {String} password  Current password of the user.
+ * @apiParam {String} password  New password of the user.
+ *
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ * { message: 'your pass was changed successfully' }
+ *
+ * @apiError UserNotFound The id of the User was not found.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *    { message: "UserNotFound", error }
+ */
+
+router.put('/user/updatepassword/:email', usercontroller.changePassword);
 
 export default router;

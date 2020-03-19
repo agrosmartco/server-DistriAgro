@@ -1,5 +1,4 @@
 import chai, { expect } from 'chai'
-import chaiHttp from 'chai-http'
 import 'mocha'
 import { User } from "../../entities/mg/User"
 import jwt from "../../services/jwt-auth"
@@ -8,7 +7,7 @@ import { hashPassword, comparePassword } from "../../services/hash.password.bcry
 
 describe('Services authentication', () => {
 
-    const userData = {
+    const userData: User | any = {
         id: '0',
         name: 'Example',
         lastname: 'User',
@@ -16,20 +15,19 @@ describe('Services authentication', () => {
         roles: ['customer']
     };
 
-    const email = 'test@hotmail.io*';
+    let result: string = '';
     const password = 'Black7180';
 
-    it('jwt-auth create token', (done) => {
+    it('jwt-auth create token', async () => {
 
-        const result = jwt.createToken(userData as User)
+        result = await jwt.createToken(userData)
         expect(result).exist;
 
-        done();
     })
 
     it('jwt-auth validate token', (done) => {
 
-        const validtedToken = jwt.validateToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIwIiwiZW1haWwiOiJ0ZXN0QGxvb3BiYWNrLmlvIiwicm9sZXMiOlsiY3VzdG9tZXIiXSwiaWF0IjoxNTg0MTE3MzM1LCJleHAiOjE1ODQyMDM3MzV9.ZASugU7b8G8I4ZrhHclK0yspV_pTUiMJ-3zYeVz5iOI');
+        const validtedToken = jwt.validateToken(result);
 
         expect(validtedToken).to.not.null;
 
@@ -55,7 +53,5 @@ describe('Services authentication', () => {
 
         done();
     })
-
-
 
 })

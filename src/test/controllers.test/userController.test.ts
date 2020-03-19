@@ -10,7 +10,7 @@ chai.use(chaiHttp)
 
 /*
 Before starting be sure to review the next steps
-
+startEnviroment()
 1.User Test Created
   {
         "id": "5e6aab9eb4beb0262cf36f20",
@@ -43,7 +43,6 @@ const findEmail = 'jucacar34@hotmail.com';
 const deleteEmail = 'jucacar36@hotmail.com'
 
 
-
 describe('User Controller and Routes', () => {
 
     const user: User | any = {
@@ -57,11 +56,20 @@ describe('User Controller and Routes', () => {
         name: 'Example',
         lastname: 'User',
         email: 'test@hotmail.io',
-        password: "Black7180",
+        password: "Test123*",
         roles: ['customer'],
     };
 
-    it('GET /user/  Get All users with authorization', async () => {
+
+    it('Enviroment', async () => {
+
+        await startEnviroment();
+
+    });
+
+
+
+    it('GET /user/  Get All users without authorization', async () => {
         await chai
             .request(app)
             .get('/api/user')
@@ -155,8 +163,66 @@ describe('User Controller and Routes', () => {
         expect(token).exist;
     });
 
+    it('Put /api/user/recoverpassword/ send new password to email', async () => {
+
+        const res = await chai
+            .request(app).keepOpen()
+            .put('/api/user/recoverpassword/jucacar28@hotmail.com')
+        expect(200);
+
+        const response = res.body.message;
+        expect(response).to.equal('Your password generated successfully and was sent to your email address');
+    });
+
+    it('Put /api/user/updatepassword/ change password', async () => {
+
+        const res = await chai
+            .request(app).keepOpen()
+            .put('/api/user/updatepassword/test@hotmail.io')
+            .send({ oldPassword: 'Test123*', newPassword: 'Test1234*' })
+        expect(200);
+
+        const response = res.body.message;
+        expect(response).to.equal('your pass was changed successfully');
+    });
+
+
 
 });
+
+async function startEnviroment() {
+
+    const userTestToCreate: User | any = {
+        name: 'Juan Carlos',
+        lastname: 'Cadavid',
+        email: 'jucacar36@hotmail.com',
+        password: 'Carlos123'
+    };
+
+    const userTestToken: User | any = {
+        name: 'Example',
+        lastname: 'User',
+        email: 'jucacar34@hotmail.com',
+        roles: ['admin', 'customer']
+    };
+
+    const emailDelete = 'test@hotmail.io';
+
+    const token = await jwt.createToken(userTestToken)
+
+    await chai
+        .request(app)
+        .delete('/api/user/' + emailDelete)
+        .set('Authorization', 'Bearer ' + token)
+
+    await chai
+        .request(app).keepOpen()
+        .post('/api/user/signup')
+        .send(userTestToCreate)
+    expect(200);
+
+
+}
 
 
 

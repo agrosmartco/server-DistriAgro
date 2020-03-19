@@ -1,4 +1,4 @@
-import { Entity,Column,ObjectIdColumn,OneToOne,BeforeInsert } from "typeorm";
+import { Entity,Column,ObjectIdColumn,OneToOne,BeforeInsert,BeforeUpdate } from "typeorm";
 import { User } from "./User";
 import bcrypt from "bcrypt";
 
@@ -15,12 +15,14 @@ export class UserCredentials{
     userId: string
 
     @BeforeInsert()
+    @BeforeUpdate()
     async hashpassword(){
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(this.password,salt);
         this.password = hash;
     }
 
+ 
     @OneToOne(type=>User, user => user.usercredentials)
     user: User;
 }

@@ -1,14 +1,17 @@
-import { Request, Response, json } from "express"
+import { Request, Response } from "express"
 import { getRepository, getCustomRepository } from "typeorm"
-import { User } from "../entities/mg/User";
+import { User } from "../entities/mg/User"
 import { UserRepository } from "../repositories/userRepository"
 import { UserCredentials } from "../entities/mg/User-Credentials"
-import validator from "../services/validator";
-import { comparePassword } from "../services/hash.password.bcrypt";
-import jwtauth from "../services/jwt-auth";
+import validator from "../services/validator"
+import { hashPassword, comparePassword } from "../services/hash.password.bcrypt"
+import jwtauth from "../services/jwt-auth"
+import mailer from "../services/mailer";
 
 
 class userController {
+
+
 
     public async getUsers(req: Request, res: Response): Promise<Response> {
 
@@ -78,12 +81,14 @@ class userController {
             const email = req.params.email;
 
             const user = await getCustomRepository(UserRepository, process.env.CONNECTION_MG).findByEmail(email) as User;
+            const Credentials = await getRepository(UserCredentials, process.env.CONNECTION_MG).find({ userId: user.id });
 
 
             if (user) {
 
 
                 const result = await getCustomRepository(UserRepository, process.env.CONNECTION_MG).remove(user) as User;
+                await getRepository(UserCredentials, process.env.CONNECTION_MG).remove(Credentials);
 
                 if (result) {
 
@@ -147,8 +152,6 @@ class userController {
 
             const providedEmail = req.body.email;
             const providedPass = req.body.password;
-
-
             const validateCredentials = await comparePassword(providedPass, providedEmail);
 
             if (!validateCredentials) {
@@ -171,7 +174,84 @@ class userController {
 
     }
 
+    public async recoverPassword(req: Request, res: Response): Promise<Response> {
 
+        try {
+
+            const email = req.params.email;
+            const user = await getCustomRepository(UserRepository, process.env.CONNECTION_MG).findByEmail(email) as User;
+
+            const newCredentials = new UserCredentials;
+            newCredentials.password = await hashPassword(Math.random().toString(36).slice(-8), 10);
+            newCredentials.userId = user.id;
+            const currentCredentials = await getRepository(UserCredentials, process.env.CONNECTION_MG).findOne({ userId: user.id }) as UserCredentials;
+
+            if (user) {
+
+                getRepository(UserCredentials, process.env.CONNECTION_MG).merge(currentCredentials, newCredentials);
+
+                await getRepository(UserCredentials, process.env.CONNECTION_MG).save(currentCredentials);
+
+
+                await mailer.sendEmail(newCredentials.password, user.email);
+
+
+                return res.json({ message: 'Your password generated successfully and was sent to your email address' });
+
+            }
+
+            return res.status(404).json({ message: 'Not user found' });
+
+
+        } catch (error) {
+
+            return res.status(404).json({ message: "UpdateUserNotFound", error });
+
+        }
+
+    }
+
+    public async changePassword(req: Request, res: Response): Promise<Response> {
+
+        try {
+
+            const email = req.params.email;
+            const oldPassword = req.body.oldPassword;
+            const newPassword = req.body.newPassword;
+
+            const user: User | any = await getCustomRepository(UserRepository, process.env.CONNECTION_MG).findByEmail(email);
+
+            if (!user) {
+                return res.status(404).json({ message: 'Not user found' });
+            }
+
+            const comparedPassword = await comparePassword(oldPassword, user.email);
+
+            if (!comparedPassword) {
+
+                return res.status(404).json({ message: 'Invalid Password' });
+
+            }
+
+            const newCredentials = new UserCredentials;
+            newCredentials.password = newPassword;
+            newCredentials.userId = user.id;
+
+            const currentCredentials = await getRepository(UserCredentials, process.env.CONNECTION_MG).findOne({ userId: user.id }) as UserCredentials;
+
+            getRepository(UserCredentials, process.env.CONNECTION_MG).merge(currentCredentials, newCredentials)
+
+            await getRepository(UserCredentials, process.env.CONNECTION_MG).save(currentCredentials);
+
+            return res.json({ message: 'your pass was changed successfully' })
+
+        } catch (error) {
+
+            return res.status(404).json({ message: "UpdateUserNotFound", error });
+
+        }
+
+    }
 
 }
 
