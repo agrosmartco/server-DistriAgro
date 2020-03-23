@@ -1,13 +1,14 @@
 import aws from "aws-sdk"
+import config from "../config/config";
 
 const s3Client = new aws.S3({
-    accessKeyId: 'AKIAXGHNCYNSMLWWEPFW',
-    secretAccessKey: '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',
-    region: 'us-east-1'
+    accessKeyId: config.AWS_ACCESS_KEY,
+    secretAccessKey: config.AWS_SECRET_ACCESS_KEY,
+    region: config.REGION
 });
 
 const uploadParams = {
-    Bucket: 'agromarketco/items/fruver',
+    Bucket: '',
     Key: '', // pass key
     Body: null, // pass file body
 };

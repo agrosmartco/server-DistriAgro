@@ -11,7 +11,7 @@ chai.use(chaiHttp)
 /*
 Before starting be sure to review the next steps
 startEnviroment()
-1.User Test Created
+1.User Test Should is Created (Manual Process)
   {
         "id": "5e6aab9eb4beb0262cf36f20",
         "name": "Example",
@@ -23,7 +23,7 @@ startEnviroment()
         ]
     }
 
-2. Create User Test
+2. Create User Test (Automatic Process)
 {
 	"name":"Juan Carlos",
 	"lastname":"Cadavid",
