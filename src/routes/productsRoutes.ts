@@ -1,6 +1,7 @@
 import { Router } from "express"
 import productscontroller from "../controllers/productsController"
 import passport from "passport"
+import upload from "../config/multer.config"
 
 const router = Router();
 
@@ -35,6 +36,8 @@ const router = Router();
  *     }
  */
 router.get('/products', productscontroller.getProducts);
+
+router.post('/products', upload.single('file'), productscontroller.createProduct);
 
 
 

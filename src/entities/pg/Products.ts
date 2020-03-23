@@ -7,7 +7,13 @@ export class Products{
     id: number;
 
     @Column()
+    reference:string;
+
+    @Column()
     description: string;
+
+    @Column()
+    idcategory: number;
 
     @Column({ nullable: true })
     price: number;
@@ -16,8 +22,9 @@ export class Products{
     quantity: number;
 
     @Column()
+    barcode:number;
+
+    @Column()
     image: string;
-
-
 
 }
