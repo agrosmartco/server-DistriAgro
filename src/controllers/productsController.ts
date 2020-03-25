@@ -1,65 +1,109 @@
-import { Request, Response } from "express"
-import { getRepository, getCustomRepository } from "typeorm"
-import { Products } from "../entities/pg/Products";
-import { ProductsRepository } from "../repositories/productsRepository"
-import s3 from "../services/aws-s3"
-
+import { Request, Response } from 'express';
+import { getCustomRepository } from 'typeorm';
+import { Products } from '../entities/pg/Products';
+import { ProductsRepository } from '../repositories/productsRepository';
+import s3 from '../services/aws-s3';
 
 class productsController {
+	public async getProducts(req: Request, res: Response): Promise<Response> {
+		try {
+			const products: Products | any = await getCustomRepository(ProductsRepository, 'default').find();
 
+			return res.json(products);
+		} catch (error) {
+			return res.status(404).json({ message: 'Products not found ' + error });
+		}
+	}
 
-    public async getProducts(req: Request, res: Response): Promise<Response> {
+	public async getOneProduct(req: Request, res: Response): Promise<Response> {
+		try {
+			const reference = req.params.reference;
+			const product = await getCustomRepository(ProductsRepository, 'default').findByReference(reference);
 
-        try {
+			if (!product) {
+				return res.status(404).json({ message: 'Product Not Found' });
+			}
 
-            const products: Products | any = await getCustomRepository(ProductsRepository, 'default').find();
+			return res.json(product);
+		} catch (error) {
+			return res.status(500).json({ message: 'Error in function GetOneProduct', error });
+		}
+	}
 
-            return res.json(products);
+	public async createProduct(req: Request, res: Response): Promise<Response> {
+		const s3Client = s3.s3Client;
+		const params = s3.uploadParams;
 
-        } catch (error) {
+		try {
+			var product: Products = JSON.parse(req.body.product);
 
-            return res.status(404).json({ message: 'Products not found ' + error });
+			const validateProduct = await getCustomRepository(ProductsRepository, 'default').findByReference(
+				product.reference
+			);
 
-        }
+			if (validateProduct) {
+				return res.status(200).json({ message: 'The product already in the DB' });
+			}
 
-    }
+			if (!req.file) {
+				return res.status(404).json({ message: 'Please upload an image' });
+			}
 
-    public async createProduct(req: Request, res: Response): Promise<Response> {
+			const createdProduct = (await getCustomRepository(ProductsRepository, 'default').save(product)) as Products;
+			params.Key = createdProduct.reference + '.' + req.file.mimetype.substring(6, 10);
 
-        const s3Client = s3.s3Client;
-        const params = s3.uploadParams;
+			params.Body = req.file.buffer;
 
-        try {
+			if (createdProduct.idcategory == 1) {
+				params.Bucket = 'agromarketco/items/fruver';
+			} else {
+				params.Bucket = 'agromarketco/items/psmt';
+			}
 
-            var product = JSON.parse(req.body.product);
+			await s3Client.upload(params, (err: any, data: any) => {
+				if (err) {
+					console.log({ error: 'Error -> ' + err + data });
+				}
+				console.log({
+					message: 'File uploaded successfully! -> keyname = ' + params.Key
+				});
+			});
 
-            const createdProduct = await getCustomRepository(ProductsRepository, 'default').save(product) as Products;
+			return res.json(createdProduct);
+		} catch (error) {
+			return res.status(404).json({ message: 'Create products not found ', error });
+		}
+	}
 
-            params.Key = createdProduct.reference+'.'+req.file.mimetype.substring(6, 10);  
-            console.log(params.Key);
-                      
-            params.Body = req.file.buffer;
+	public async deleteProduct(req: Request, res: Response): Promise<Response> {
+		const reference = req.params.reference;
 
-            const response = s3Client.upload(params, (err:any, data:any)=>{
-                if (err) {
-                    console.log({error:"Error -> " + err});
-                    
-                }
-                console.log({message: 'File uploaded successfully! -> keyname = ' + params.Key});
-              
-            });
-           
-            return res.json(createdProduct);
+		try {
+			const product = (await getCustomRepository(ProductsRepository, 'default').findByReference(
+				reference
+			)) as Products;
 
-        } catch (error) {
+			if (!product) {
+				res.status(404).json({ message: 'Product not Found' });
+			}
 
-            return res.status(404).json({ message: 'Create products not found ', error })
+			const productDelete = (await getCustomRepository(ProductsRepository, 'default').remove(
+				product
+			)) as Products;
 
-        }
+			if (productDelete) {
+				return res.json({
+					message: 'The product ' + product.description + ' ' + product.reference + ' was deleted ',
+					data: { productDelete }
+				});
+			}
 
-    }
-
+			return res.status(404).json({ message: 'Not user was deleted' });
+		} catch (error) {
+			return res.status(500).json({ message: 'Error deleteProduct', error });
+		}
+	}
 }
 
-const porductscontroller = new productsController;
+const porductscontroller = new productsController();
 export default porductscontroller;

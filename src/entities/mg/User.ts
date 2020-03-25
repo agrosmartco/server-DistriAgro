@@ -1,27 +1,24 @@
-import { Entity,Column,ObjectIdColumn,OneToOne,JoinColumn } from "typeorm";
-import { UserCredentials } from "./User-Credentials";
+import {Entity, Column, ObjectIdColumn, OneToOne, JoinColumn} from 'typeorm';
+import {UserCredentials} from './User-Credentials';
 
 @Entity()
-export class User{
+export class User {
+  @ObjectIdColumn()
+  id: string;
 
-    @ObjectIdColumn()
-    id:string
+  @Column()
+  name: string;
 
-    @Column()
-    name:string
+  @Column()
+  lastname: string;
 
-    @Column()
-    lastname:string
+  @Column({unique: true})
+  email: string;
 
-    @Column({ unique: true })
-    email:string
+  @Column()
+  roles: string[];
 
-    @Column()
-    roles: string[];
-
-    @OneToOne(type=>UserCredentials, usercredentials => usercredentials.user)
-    @JoinColumn()
-    usercredentials: UserCredentials;
-
-
+  @OneToOne(() => UserCredentials, (usercredentials) => usercredentials.user)
+  @JoinColumn()
+  usercredentials: UserCredentials;
 }

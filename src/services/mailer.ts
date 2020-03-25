@@ -1,24 +1,21 @@
-
-import nodemailer from "nodemailer";
+import nodemailer from 'nodemailer';
 
 export class Mailer {
+  public async sendEmail(newPassword: string, userEmail: string): Promise<any> {
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'info@agrosmartco.com',
+        pass: process.env.EMAIL,
+      },
+    });
 
-    public async sendEmail(newPassword: string, userEmail: string): Promise<any> {
-
-        var transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: 'info@agrosmartco.com',
-                pass: process.env.EMAIL
-            }
-        });
-
-        var mailOptions = {
-            from: 'info@agrosmartco.com',
-            to: userEmail,
-            subject: 'Recover Password',
-            text: 'That was easy! ' + newPassword,
-            html: `<!DOCTYPE html>
+    var mailOptions = {
+      from: 'info@agrosmartco.com',
+      to: userEmail,
+      subject: 'Recover Password',
+      text: 'That was easy! ' + newPassword,
+      html: `<!DOCTYPE html>
             <html lang="en">
             
             <head>
@@ -49,19 +46,17 @@ export class Mailer {
                     crossorigin="anonymous"></script>
             </body>
             
-            </html>`
-        };
+            </html>`,
+    };
 
-        transporter.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                console.log(error);
-            } else {
-                console.log('Email sent: ' + info.response);
-            }
-        });
-
-    }
-
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+  }
 }
 
 const mailer = new Mailer();

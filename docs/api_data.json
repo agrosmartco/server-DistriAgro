@@ -1,9 +1,9 @@
 [
   {
-    "type": "get",
+    "type": "post",
     "url": "/products",
-    "title": "Show all products",
-    "name": "GetProducts",
+    "title": "Create new products",
+    "name": "CreateProducts",
     "group": "Products",
     "success": {
       "fields": {
@@ -12,8 +12,8 @@
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "id",
-            "description": "<p>id of the Product.</p>"
+            "field": "reference",
+            "description": "<p>reference of product.</p>"
           },
           {
             "group": "Success 200",
@@ -21,6 +21,13 @@
             "optional": false,
             "field": "description",
             "description": "<p>description of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "category",
+            "description": "<p>category of the Product.</p>"
           },
           {
             "group": "Success 200",
@@ -40,6 +47,13 @@
             "group": "Success 200",
             "type": "String",
             "optional": false,
+            "field": "barcode",
+            "description": "<p>barcode of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
             "field": "image",
             "description": "<p>image of the Product.</p>"
           }
@@ -48,7 +62,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": " HTTP/1.1 200 OK\n{\n     \"id\": \"5e5973deea960c30d817d10a\",\n     \"description\": \"Banano UR\",\n     \"price\": 2000,\n     \"quantity\": 100,\n     \"image\": \"string\"\n }",
+          "content": "  HTTP/1.1 200 OK\n {\n\"id\": \"1\",\n\"reference\": \"V0001\",\n\"description\": \"Arveja\",\n\"idcategory\": 2,\n\"price\": 1500,\n\"quantity\": 500,\n\"barcode\": \"0000011111\",\n\"image\": \"\"\n}",
           "type": "json"
         }
       ]
@@ -59,15 +73,223 @@
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "ProductNotFound",
-            "description": "<p>The id of the User was not found.</p>"
+            "field": "The",
+            "description": "<p>product already in the DB.</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Create",
+            "description": "<p>products not found.</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Please",
+            "description": "<p>upload an image.</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Error-Response:",
-          "content": "HTTP/1.1 404 Not Found\n{\n  \"error\": \"ProductNotFound\"\n}",
+          "content": "    HTTP/1.1 404 Not Found\n{ message: Create products not found }",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/routes/productsRoutes.ts",
+    "groupTitle": "Products"
+  },
+  {
+    "type": "get",
+    "url": "/products",
+    "title": "Show one products",
+    "name": "GetOneProduct",
+    "group": "Products",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>id of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "reference",
+            "description": "<p>reference of product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>description of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "category",
+            "description": "<p>category of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "price",
+            "description": "<p>price of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "quantity",
+            "description": "<p>quantity of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "barcode",
+            "description": "<p>barcode of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "image",
+            "description": "<p>image of the Product.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "  HTTP/1.1 200 OK\n {\n\"id\": \"1\",\n\"reference\": \"V0001\",\n\"description\": \"Arveja\",\n\"idcategory\": 2,\n\"price\": 1500,\n\"quantity\": 500,\n\"barcode\": \"0000011111\",\n\"image\": \"\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Products",
+            "description": "<p>not found.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 404 Not Found\n { message: Products not found }",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/routes/productsRoutes.ts",
+    "groupTitle": "Products"
+  },
+  {
+    "type": "get",
+    "url": "/products",
+    "title": "Show all products",
+    "name": "GetProducts",
+    "group": "Products",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>id of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "reference",
+            "description": "<p>reference of product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>description of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "category",
+            "description": "<p>category of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "price",
+            "description": "<p>price of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "quantity",
+            "description": "<p>quantity of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "barcode",
+            "description": "<p>barcode of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "image",
+            "description": "<p>image of the Product.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "  HTTP/1.1 200 OK\n {\n\"id\": \"1\",\n\"reference\": \"V0001\",\n\"description\": \"Arveja\",\n\"idcategory\": 2,\n\"price\": 1500,\n\"quantity\": 500,\n\"barcode\": \"0000011111\",\n\"image\": \"\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Products",
+            "description": "<p>not found.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 404 Not Found\n { message: Products not found }",
           "type": "json"
         }
       ]
