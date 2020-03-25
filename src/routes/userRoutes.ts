@@ -1,9 +1,8 @@
-import { Router } from "express"
-import userController from "../controllers/userController"
-import passport from "passport"
-import permit from "../middlewares/permission"
-import usercontroller from "../controllers/userController";
-
+import {Router} from 'express';
+import userController from '../controllers/userController';
+import passport from 'passport';
+import permit from '../middlewares/permission';
+import usercontroller from '../controllers/userController';
 
 const router = Router();
 
@@ -33,7 +32,12 @@ const router = Router();
  *     HTTP/1.1 404 Not Found
  *     { message: "UsersNotFound", error }
  */
-router.get('/user', passport.authenticate('jwt', { session: false }), permit(["admin", "support"]), userController.getUsers);
+router.get(
+  '/user',
+  passport.authenticate('jwt', {session: false}),
+  permit(['admin', 'support']),
+  userController.getUsers,
+);
 
 /**
  * @api {get} /user/:email Show one users
@@ -63,7 +67,12 @@ router.get('/user', passport.authenticate('jwt', { session: false }), permit(["a
  *     HTTP/1.1 404 Not Found
  *     { message: "UserNotFound", error }
  */
-router.get('/user/:email', passport.authenticate('jwt', { session: false }), permit(["admin", "support"]), userController.getUser);
+router.get(
+  '/user/:email',
+  passport.authenticate('jwt', {session: false}),
+  permit(['admin', 'support']),
+  userController.getUser,
+);
 
 /**
  * @api {put} /user/:email Update one user
@@ -96,7 +105,12 @@ router.get('/user/:email', passport.authenticate('jwt', { session: false }), per
  *     HTTP/1.1 404 Not Found
  *    { message: "UserNotFound", error }
  */
-router.put('/user/:email', passport.authenticate('jwt', { session: false }), permit(["admin", "support"]), userController.updateUser);
+router.put(
+  '/user/:email',
+  passport.authenticate('jwt', {session: false}),
+  permit(['admin', 'support']),
+  userController.updateUser,
+);
 
 /**
  * @api {delete} /user/:email Delete one users
@@ -105,25 +119,25 @@ router.put('/user/:email', passport.authenticate('jwt', { session: false }), per
  * @apiGroup User
  *
  * @apiParam {string} email  email of the user param header.
- * 
+ *
  * @apiSuccess {String} id id of the user.
  * @apiSuccess {String} name  name of the user.
  * @apiSuccess {String} lastname  lastname of the user.
  * @apiSuccess {String} email  email of the user.
- * 
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
-*{
-*   "id": "5e6aa3a35c03174a701a675b",
-*   "name": "Juan Carlos",
-*   "lastname": "Cadavid",
-*   "email": "jucacar35@hotmail.com",
-*   "roles": [
-*       "admin",
-*       "customer",
-*       "support"
-*   ]
-*}
+ *{
+ *   "id": "5e6aa3a35c03174a701a675b",
+ *   "name": "Juan Carlos",
+ *   "lastname": "Cadavid",
+ *   "email": "jucacar35@hotmail.com",
+ *   "roles": [
+ *       "admin",
+ *       "customer",
+ *       "support"
+ *   ]
+ *}
  *
  * @apiError UserNotFound validate email.
  *
@@ -131,8 +145,12 @@ router.put('/user/:email', passport.authenticate('jwt', { session: false }), per
  *     HTTP/1.1 404 Not Found
  *     { message: "DeleteUserNotFound", error }
  */
-router.delete('/user/:email', passport.authenticate('jwt', { session: false }), permit(["admin", "support"]), userController.deleteUser);
-
+router.delete(
+  '/user/:email',
+  passport.authenticate('jwt', {session: false}),
+  permit(['admin', 'support']),
+  userController.deleteUser,
+);
 
 /**
  * @api {post} /user/signup signup user
@@ -169,12 +187,12 @@ router.post('/user/signup', userController.signUp);
  * @api {post} /user/signin signin user
  * @apiName signinUser
  * @apiGroup User
- * 
+ *
  * @apiParam {string} email  email of the user param header.
  * @apiParam {String} password  password of the user.
  *
  * @apiSuccess {String} token token of the user.
- * 
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *    {
@@ -187,7 +205,7 @@ router.post('/user/signup', userController.signUp);
  *     HTTP/1.1 404 Not Found
  *    {
  *   "msg": "Validate Credentials"
-*
+ *
  */
 router.post('/user/signin', userController.signIn);
 
@@ -195,10 +213,10 @@ router.post('/user/signin', userController.signIn);
  * @api {put} /user/:email Recover password of user
  * @apiName RecoverPassword
  * @apiGroup User
- * 
+ *
  * @apiParam {string} email  email of the user param header.
  *
- * 
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  * { message: 'Your password generated successfully and was sent to your email address' }
@@ -211,17 +229,16 @@ router.post('/user/signin', userController.signIn);
  */
 router.put('/user/recoverpassword/:email', userController.recoverPassword);
 
-
 /**
  * @api {put} /user/:email Update password of user
  * @apiName UpdatePassword
  * @apiGroup User
- * 
+ *
  * @apiParam {string} email  email of the user param header.
  * @apiParam {String} password  Current password of the user.
  * @apiParam {String} password  New password of the user.
  *
- * 
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  * { message: 'your pass was changed successfully' }

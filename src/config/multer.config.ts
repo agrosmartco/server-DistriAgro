@@ -1,6 +1,6 @@
-import multer from "multer"
+import multer from 'multer';
 
-var storage = multer.memoryStorage()
+var storage = multer.memoryStorage();
 var upload = multer({storage: storage});
- 
+
 export default upload;

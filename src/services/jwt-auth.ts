@@ -1,35 +1,30 @@
 import jwt from 'jsonwebtoken';
-import { User } from '../entities/mg/User';
-import config from "../config/config";
+import {User} from '../entities/mg/User';
+import config from '../config/config';
 
 export class jwtAuth {
+  public async createToken(user: User): Promise<string> {
+    const token = jwt.sign(
+      {_id: user.id, email: user.email, roles: user.roles},
+      config.jwtSecret || 'tokentest',
+      {
+        expiresIn: 60 * 60 * 24,
+      },
+    );
 
-    public async createToken(user: User): Promise<string> {
+    return token;
+  }
 
-        const token = jwt.sign({ _id: user.id, email: user.email, roles: user.roles }, config.jwtSecret || 'tokentest', {
-            expiresIn: 60 * 60 * 24
-        })
+  public async validateToken(token: string): Promise<string | object> {
+    const invalidToken = "Error verifying token : 'token' is null";
 
-        return token
-
+    if (!token) {
+      return invalidToken;
     }
 
-    public async validateToken(
-        token: string
-    ): Promise<string | object> {
-
-        const invalidToken = "Error verifying token : 'token' is null";
-
-        if (!token) {
-
-            return invalidToken
-
-        }
-
-            const payload = jwt.verify(token, config.jwtSecret || 'tokentest')
-            return payload
-    }
-
+    const payload = jwt.verify(token, config.jwtSecret || 'tokentest');
+    return payload;
+  }
 }
 
 const jwtauth = new jwtAuth();

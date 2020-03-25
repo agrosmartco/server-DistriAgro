@@ -1,8 +1,8 @@
-import { Router } from "express"
-import productscontroller from "../controllers/productsController"
-import passport from "passport"
-import upload from "../config/multer.config"
-import permit from "../middlewares/permission"
+import { Router } from 'express';
+import productscontroller from '../controllers/productsController';
+import passport from 'passport';
+import upload from '../config/multer.config';
+import permit from '../middlewares/permission';
 
 const router = Router();
 
@@ -19,7 +19,7 @@ const router = Router();
  * @apiSuccess {Number} quantity  quantity of the Product.
  * @apiSuccess {String} barcode  barcode of the Product.
  * @apiSuccess {String} image  image of the Product.
- * 
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *    {
@@ -33,11 +33,11 @@ const router = Router();
  *   "image": ""
  *   }
  *
- * @apiError { message: 'Products not found ' + error }.
+ * @apiError Products not found.
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 404 Not Found
- *      { message: 'Products not found ' + error }
+ *      { message: Products not found }
  */
 router.get('/products', productscontroller.getProducts);
 
@@ -54,7 +54,7 @@ router.get('/products', productscontroller.getProducts);
  * @apiSuccess {Number} quantity  quantity of the Product.
  * @apiSuccess {String} barcode  barcode of the Product.
  * @apiSuccess {String} image  image of the Product.
- * 
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *    {
@@ -68,13 +68,13 @@ router.get('/products', productscontroller.getProducts);
  *   "image": ""
  *   }
  *
- * @apiError { message: 'Products not found ' + error }.
+ * @apiError Products not found.
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 404 Not Found
- *      { message: 'Products not found ' + error }
+ *      { message: Products not found }
  */
-router.get('/products/:reference',productscontroller.getOneProduct);
+router.get('/products/:reference', productscontroller.getOneProduct);
 
 /**
  * @api {post} /products Create new products
@@ -88,7 +88,7 @@ router.get('/products/:reference',productscontroller.getOneProduct);
  * @apiSuccess {Number} quantity  quantity of the Product.
  * @apiSuccess {String} barcode  barcode of the Product.
  * @apiSuccess {String} image  image of the Product.
- * 
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *    {
@@ -102,20 +102,59 @@ router.get('/products/:reference',productscontroller.getOneProduct);
  *   "image": ""
  *   }
  *
- * @apiError { message: 'The product already in the DB' }.
- * @apiError { message: 'Create products not found ', error }
- * @apiError { message: 'Please upload an image' }
+ * @apiError The product already in the DB.
+ * @apiError Create products not found.
+ * @apiError Please upload an image.
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 404 Not Found
- * { message: 'Create products not found ', error }
+ * { message: Create products not found }
  */
-router.post('/products',
-    passport.authenticate('jwt', { session: false }),
-    permit(["admin", "support"]),
-    upload.single('file'),
-    productscontroller.createProduct);
+router.post(
+	'/products',
+	passport.authenticate('jwt', { session: false }),
+	permit([ 'admin', 'support' ]),
+	upload.single('file'),
+	productscontroller.createProduct
+);
 
-
+/**
+ * @api {delete} /products delete product
+ * @apiName DeleteProduct
+ * @apiGroup Products
+ *
+ * @apiSuccess {String} reference reference of product.
+ * @apiSuccess {String} description  description of the Product.
+ * @apiSuccess {Number} category  category of the Product.
+ * @apiSuccess {Number} price  price of the Product.
+ * @apiSuccess {Number} quantity  quantity of the Product.
+ * @apiSuccess {String} barcode  barcode of the Product.
+ * @apiSuccess {String} image  image of the Product.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *    {
+ *   "id": "1",
+ *   "reference": "V0001",
+ *   "description": "Arveja",
+ *   "idcategory": 2,
+ *   "price": 1500,
+ *   "quantity": 500,
+ *   "barcode": "0000011111",
+ *   "image": ""
+ *   }
+ *
+ * @apiError Create products not found.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ * { message: Create products not found }
+ */
+router.delete(
+	'/products/:reference/',
+	passport.authenticate('jwt', { session: false }),
+	permit([ 'admin', 'support' ]),
+	productscontroller.deleteProduct
+);
 
 export default router;

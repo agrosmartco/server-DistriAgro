@@ -1,28 +1,33 @@
-import { Entity,Column,ObjectIdColumn,OneToOne,BeforeInsert,BeforeUpdate } from "typeorm";
-import { User } from "./User";
-import bcrypt from "bcrypt";
+import {
+  Entity,
+  Column,
+  ObjectIdColumn,
+  OneToOne,
+  BeforeInsert,
+  BeforeUpdate,
+} from 'typeorm';
+import {User} from './User';
+import bcrypt from 'bcrypt';
 
 @Entity()
-export class UserCredentials{
+export class UserCredentials {
+  @ObjectIdColumn()
+  id: string;
 
-    @ObjectIdColumn()
-    id:string
+  @Column()
+  password: string;
 
-    @Column()
-    password:string
+  @Column({nullable: true})
+  userId: string;
 
-    @Column({ nullable: true })
-    userId: string
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashpassword() {
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(this.password, salt);
+    this.password = hash;
+  }
 
-    @BeforeInsert()
-    @BeforeUpdate()
-    async hashpassword(){
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(this.password,salt);
-        this.password = hash;
-    }
-
- 
-    @OneToOne(type=>User, user => user.usercredentials)
-    user: User;
+  @OneToOne(() => User, (user) => user.usercredentials)
+  user: User;
 }
