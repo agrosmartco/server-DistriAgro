@@ -2,11 +2,11 @@
   {
     "name": "default",
     "type": "postgres",
-    "host": "localhost",
+    "host": "distriagro.ctwnnpfxxzig.us-east-1.rds.amazonaws.com",
     "port": 5432,
     "username": "postgres",
-    "password": "Kaspersky13*",
-    "database": "Agrocommerce",
+    "password": "postgres",
+    "database": "distriagro",
     "entities": ["dist/entities/pg/**/*.js"],
     "synchrinize": true
   },

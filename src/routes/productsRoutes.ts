@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import {Router} from 'express';
 import productscontroller from '../controllers/productsController';
 import passport from 'passport';
 import upload from '../config/multer.config';
@@ -111,11 +111,11 @@ router.get('/products/:reference', productscontroller.getOneProduct);
  * { message: Create products not found }
  */
 router.post(
-	'/products',
-	passport.authenticate('jwt', { session: false }),
-	permit([ 'admin', 'support' ]),
-	upload.single('file'),
-	productscontroller.createProduct
+  '/products',
+  passport.authenticate('jwt', {session: false}),
+  permit(['admin', 'support']),
+  upload.single('file'),
+  productscontroller.createProduct,
 );
 
 /**
@@ -151,10 +151,49 @@ router.post(
  * { message: Create products not found }
  */
 router.delete(
-	'/products/:reference/',
-	passport.authenticate('jwt', { session: false }),
-	permit([ 'admin', 'support' ]),
-	productscontroller.deleteProduct
+  '/products/:reference/',
+  passport.authenticate('jwt', {session: false}),
+  permit(['admin', 'support']),
+  productscontroller.deleteProduct,
+);
+
+/**
+ * @api {put} /products/:reference Update product
+ * @apiName UpdateProduct
+ * @apiGroup Products
+ *
+ * @apiSuccess {String} reference reference of product.
+ * @apiSuccess {String} description  description of the Product.
+ * @apiSuccess {Number} category  category of the Product.
+ * @apiSuccess {Number} price  price of the Product.
+ * @apiSuccess {Number} quantity  quantity of the Product.
+ * @apiSuccess {String} barcode  barcode of the Product.
+ * @apiSuccess {String} image  image of the Product.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *    {
+ *   "id": "1",
+ *   "reference": "V0001",
+ *   "description": "Arveja",
+ *   "idcategory": 2,
+ *   "price": 1500,
+ *   "quantity": 500,
+ *   "barcode": "0000011111",
+ *   "image": ""
+ *   }
+ *
+ * @apiError Create products not found.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ * { message: Create products not found }
+ */
+router.put(
+  '/products/:reference/',
+  passport.authenticate('jwt', {session: false}),
+  permit(['admin', 'support']),
+  productscontroller.updateProduct,
 );
 
 export default router;

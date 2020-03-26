@@ -18,7 +18,7 @@ class userController {
 
       return res.json(users);
     } catch (error) {
-      return res.status(404).json({message: 'UsersNotFound', error});
+      return res.status(500).json({message: 'GetUsers Not Found', error});
     }
   }
 

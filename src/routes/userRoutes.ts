@@ -160,7 +160,8 @@ router.delete(
  * @apiParam {String} name  name of the user.
  * @apiParam {String} lastname  lastname of the user.
  * @apiParam {String} email  email of the user.
- *
+ * @apiParam {String} password  password of the user.
+
  * @apiSuccess {String} id id of the user.
  * @apiSuccess {String} name  name of the user.
  * @apiSuccess {String} lastname  lastname of the user.
@@ -168,12 +169,20 @@ router.delete(
  * 
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
- *    {
-        "id": "5e69157f10972e52447829d2",
-        "name": "Juan Carlos",
-        "lastname": "Cadavid",
-        "email": "jucacar33@hotmail.com"
-    }
+ * {
+ *     "message": "User created successfully",
+ *     "user": {
+ *         "user": {
+ *             "name": "Juan prueba",
+ *             "lastname": "prueba",
+ *             "email": "prueba@hotmail.com",
+ *             "roles": [
+ *                 "customer"
+ *             ],
+ *             "id": "5e7bf96fd8156984985e7b26"
+ *         }
+ *     }
+ * }
  *
  * @apiError UserNotFound Validate parameters.
  *

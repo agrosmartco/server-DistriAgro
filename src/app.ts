@@ -1,4 +1,4 @@
-import express from 'express';
+import express, {Application} from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import 'reflect-metadata';
@@ -10,26 +10,44 @@ import passportMiddleware from './middlewares/passport';
 import ProductosRoutes from './routes/productsRoutes';
 import userRoutes from './routes/userRoutes';
 
-// Initialization
-const app = express();
-createConnections();
+class Server {
+  // Initialization
+  public app: Application;
 
-// Settings
-app.set('port', process.env.port || 3000);
+  constructor() {
+    this.app = express();
+    this.config();
+    this.routes();
+    createConnections();
+  }
 
-//Middlewares
-app.use(morgan('dev'));
-app.use(cors());
-app.use(express.urlencoded({extended: false}));
-app.use(express.json());
-app.use(passport.initialize());
-passport.use(passportMiddleware);
+  config(): void {
+    // Settings
+    this.app.set('port', process.env.port || 3000);
 
-//Routes
-app.get('/', (req, res) => {
-  res.send(`The API is at http://localhost:${app.get('port')}`);
-});
-app.use('/api/', ProductosRoutes);
-app.use('/api/', userRoutes);
+    //Middlewares
+    this.app.use(morgan('dev'));
+    this.app.use(cors());
+    this.app.use(express.urlencoded({extended: false}));
+    this.app.use(express.json());
+    this.app.use(passport.initialize());
+    passport.use(passportMiddleware);
+  }
 
-export default app;
+  routes(): void {
+    //Routes
+    this.app.get('/', (req, res) => {
+      res.send(`The API is at http://localhost:${this.app.get('port')}`);
+    });
+    this.app.use('/api/', ProductosRoutes);
+    this.app.use('/api/', userRoutes);
+  }
+
+  start(): void {
+    this.app.listen(this.app.get('port'));
+    console.log('Server on Port', this.app.get('port'));
+  }
+}
+
+const server = new Server();
+export default server.app;
