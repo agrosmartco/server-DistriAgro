@@ -29,6 +29,9 @@ coverage
 # nyc test coverage
 .nyc_output
 
+#TypeOrm
+ormconfig.json
+
 # Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
 
@@ -145,4 +148,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/node,windows,visualstudiocode
+
+# Config
+config
 

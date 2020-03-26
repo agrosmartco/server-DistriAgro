@@ -20,7 +20,6 @@ startEnviroment()
             "customer"
         ]
     }
-
 2. Create User Test (Automatic Process)
 {
 	"name":"Juan Carlos",
@@ -28,11 +27,8 @@ startEnviroment()
 	"email":"jucacar36@hotmail.com",
 	"password":"Carlos123"
 }
-
 2.Delete User
-
 test@hotmail.io
-
 */
 
 const app = 'http://localhost:3000';

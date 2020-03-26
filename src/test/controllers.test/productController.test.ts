@@ -6,12 +6,39 @@ import jwt from '../../services/jwt-auth';
 
 chai.use(chaiHttp);
 
+/*
+Before starting be sure to review the next steps
+startEnviroment()
+1.Product Test Should is Created (Manual Process) and add image (form-data file = file  &&  product= Text)
+ {
+	"reference":"V0001",
+    "description": "Naranja",
+    "idcategory":"1",
+    "price": "1500",
+    "quantity": "500",
+    "barcode":"0000011111",
+    "image": ""
+		
+	}
+
+*/
+
 describe('Product Controller', () => {
   const Newproduct = {
     reference: 'V0001',
     description: 'Arveja',
     idcategory: '2',
     price: '1500',
+    quantity: '500',
+    barcode: '0000011111',
+    image: '',
+  };
+
+  const UpdateProduct = {
+    reference: 'V0001',
+    description: 'Arvejitas',
+    idcategory: '2',
+    price: '1600',
     quantity: '500',
     barcode: '0000011111',
     image: '',
@@ -71,6 +98,18 @@ describe('Product Controller', () => {
       });
   });
 
+  it('Update /products/:referece  Update product V0001', async () => {
+    const token = await jwt.createToken(user);
+
+    chai
+      .request(app)
+      .delete('/api/products/V0001')
+      .set('Authorization', 'Bearer ' + token)
+      .send(UpdateProduct)
+      .then((res) => {
+        expect(res).to.have.status(200);
+      });
+  });
 
   it('Delete /products/:referece  Delete product V0001', async () => {
     const token = await jwt.createToken(user);
@@ -83,5 +122,4 @@ describe('Product Controller', () => {
         expect(res).to.have.status(200);
       });
   });
-
 });

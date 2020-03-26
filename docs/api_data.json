@@ -103,6 +103,97 @@
     "groupTitle": "Products"
   },
   {
+    "type": "delete",
+    "url": "/products",
+    "title": "delete product",
+    "name": "DeleteProduct",
+    "group": "Products",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "reference",
+            "description": "<p>reference of product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>description of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "category",
+            "description": "<p>category of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "price",
+            "description": "<p>price of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "quantity",
+            "description": "<p>quantity of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "barcode",
+            "description": "<p>barcode of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "image",
+            "description": "<p>image of the Product.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "  HTTP/1.1 200 OK\n {\n\"id\": \"1\",\n\"reference\": \"V0001\",\n\"description\": \"Arveja\",\n\"idcategory\": 2,\n\"price\": 1500,\n\"quantity\": 500,\n\"barcode\": \"0000011111\",\n\"image\": \"\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Create",
+            "description": "<p>products not found.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "    HTTP/1.1 404 Not Found\n{ message: Create products not found }",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/routes/productsRoutes.ts",
+    "groupTitle": "Products"
+  },
+  {
     "type": "get",
     "url": "/products",
     "title": "Show one products",
@@ -290,6 +381,97 @@
         {
           "title": "Error-Response:",
           "content": "HTTP/1.1 404 Not Found\n { message: Products not found }",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/routes/productsRoutes.ts",
+    "groupTitle": "Products"
+  },
+  {
+    "type": "put",
+    "url": "/products/:reference",
+    "title": "Update product",
+    "name": "UpdateProduct",
+    "group": "Products",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "reference",
+            "description": "<p>reference of product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>description of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "category",
+            "description": "<p>category of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "price",
+            "description": "<p>price of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "quantity",
+            "description": "<p>quantity of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "barcode",
+            "description": "<p>barcode of the Product.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "image",
+            "description": "<p>image of the Product.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "  HTTP/1.1 200 OK\n {\n\"id\": \"1\",\n\"reference\": \"V0001\",\n\"description\": \"Arveja\",\n\"idcategory\": 2,\n\"price\": 1500,\n\"quantity\": 500,\n\"barcode\": \"0000011111\",\n\"image\": \"\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Create",
+            "description": "<p>products not found.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "    HTTP/1.1 404 Not Found\n{ message: Create products not found }",
           "type": "json"
         }
       ]
@@ -858,6 +1040,13 @@
             "optional": false,
             "field": "email",
             "description": "<p>email of the user.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "password",
+            "description": "<p>password of the user.</p>"
           }
         ]
       }
@@ -898,7 +1087,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": " HTTP/1.1 200 OK\n{\n     \"id\": \"5e69157f10972e52447829d2\",\n     \"name\": \"Juan Carlos\",\n     \"lastname\": \"Cadavid\",\n     \"email\": \"jucacar33@hotmail.com\"\n }",
+          "content": "    HTTP/1.1 200 OK\n{\n    \"message\": \"User created successfully\",\n    \"user\": {\n        \"user\": {\n            \"name\": \"Juan prueba\",\n            \"lastname\": \"prueba\",\n            \"email\": \"prueba@hotmail.com\",\n            \"roles\": [\n                \"customer\"\n            ],\n            \"id\": \"5e7bf96fd8156984985e7b26\"\n        }\n    }\n}",
           "type": "json"
         }
       ]
