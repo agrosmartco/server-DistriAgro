@@ -1,11 +1,6 @@
 import aws from 'aws-sdk';
-import config from '../config/config';
 
-const s3Client = new aws.S3({
-  accessKeyId: config.AWS_ACCESS_KEY,
-  secretAccessKey: config.AWS_SECRET_ACCESS_KEY,
-  region: config.REGION,
-});
+const s3Client = new aws.S3(aws.config.loadFromPath('./awsconfig.json'));
 
 const uploadParams = {
   Bucket: '',
