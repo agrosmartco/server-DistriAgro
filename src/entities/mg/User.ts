@@ -1,5 +1,14 @@
-import {Entity, Column, ObjectIdColumn, OneToOne, JoinColumn} from 'typeorm';
+import {
+  Entity,
+  Column,
+  ObjectIdColumn,
+  OneToOne,
+  JoinColumn,
+  BeforeInsert,
+  BeforeUpdate,
+} from 'typeorm';
 import {UserCredentials} from './User-Credentials';
+import {validateOrReject, Length, IsString} from 'class-validator';
 
 @Entity()
 export class User {
@@ -7,9 +16,13 @@ export class User {
   id: string;
 
   @Column()
+  @Length(1, 20)
+  @IsString()
   name: string;
 
   @Column()
+  @Length(1, 30)
+  @IsString()
   lastname: string;
 
   @Column({unique: true})
@@ -17,6 +30,12 @@ export class User {
 
   @Column()
   roles: string[];
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async validater() {
+    await validateOrReject(this);
+  }
 
   @OneToOne(() => UserCredentials, (usercredentials) => usercredentials.user)
   @JoinColumn()

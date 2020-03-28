@@ -9,6 +9,7 @@ import passportMiddleware from './middlewares/passport';
 
 import ProductosRoutes from './routes/productsRoutes';
 import userRoutes from './routes/userRoutes';
+import orderRoutes from './routes/orderRoutes';
 
 class Server {
   // Initialization
@@ -41,6 +42,7 @@ class Server {
     });
     this.app.use('/api/', ProductosRoutes);
     this.app.use('/api/', userRoutes);
+    this.app.use('/api/', orderRoutes);
   }
 
   start(): void {

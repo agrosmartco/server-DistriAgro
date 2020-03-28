@@ -5,7 +5,7 @@
     "host": "distriagro.ctwnnpfxxzig.us-east-1.rds.amazonaws.com",
     "port": 5432,
     "username": "postgres",
-    "password": "postgres",
+    "password": "Kaspersky13*",
     "database": "distriagro",
     "entities": ["dist/entities/pg/**/*.js"],
     "synchrinize": true
